@@ -1,3 +1,47 @@
+const buttons = document.querySelectorAll('button');
+
+buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+        playRound(button.id);
+    })
+})
+
+const playerScore = document.getElementById("playerscore");
+const computerScore = document.getElementById('computerscore');
+const result = document.getElementById('result');
+
+let pScore = 0;
+let cScore = 0;
+let winScore = 5;
+
+function playRound(playerSelection) {
+    let computerSelection = getComputerChoice();
+    playerSelection = capitalize(playerSelection);
+    if (playerSelection == computerSelection) {
+        result.textContent = "It's a draw! " + playerSelection + " draws " + computerSelection + "!";
+    } else if (playerSelection == "Rock" && computerSelection == "Paper" || 
+               playerSelection == "Paper" && computerSelection == "Scissors" ||
+               playerSelection == "Scissors" && computerSelection == "Rock") {
+            result.textContent = "You Lose! " + computerSelection + " beats " + playerSelection +"!";
+            cScore++;
+            computerScore.textContent = cScore.toString();
+    } else {
+        result.textContent = "You Win! " + playerSelection + " beats " + computerSelection + "!";
+        pScore++;
+        playerScore.textContent = pScore.toString();
+    }
+    checkForWinner(); 
+}
+
+
+function checkForWinner() {
+    if (pScore == winScore) {
+        result.textContent = "The player wins, congratulations!";
+    } else if (cScore == winScore) {
+        result.textContent = "The computer wins, better luck next time!";
+    }
+}
+
 function getComputerChoice() {
     let randomChoice = Math.floor(Math.random() * 3);
     console.log(randomChoice);
@@ -20,40 +64,3 @@ function capitalize(word) {
     return firstLetter.toUpperCase() + rest.toLowerCase();
 }
 
-function playRound(playerSelection, computerSelection) {
-    playerSelection = capitalize(playerSelection);
-    if (playerSelection == computerSelection) {
-        console.log("It's a draw! " + playerSelection + " draws " + computerSelection + "!");
-        return 0;
-    } else if (playerSelection == "Rock" && computerSelection == "Paper" || 
-               playerSelection == "Paper" && computerSelection == "Scissors" ||
-               playerSelection == "Scissors" && computerSelection == "Rock") {
-        console.log("You Lose! " + computerSelection + " beats " + playerSelection +"!");
-        return 2; 
-    } else {
-        console.log("You Win! " + playerSelection + " beats " + computerSelection + "!");
-        return 1;
-    } 
-}
-
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-    for (let i = 0; i < 5; i++) {
-        let playerSelection = capitalize(prompt("Rock, Paper or Scissors?", ""));
-        if (!(playerSelection == "Rock" || playerSelection == "Paper" || playerSelection == "Scissors") || playerSelection == "") {
-            console.log("You are disqualified!");
-            return;
-        }
-        let roundResult = playRound(playerSelection, getComputerChoice());
-        if (roundResult == 1) {
-            playerScore++;
-        } 
-        if (roundResult == 2) {
-            computerScore++;
-        }
-    }
-    return "Result: " + playerScore.toString() + ":" + computerScore.toString();
-}
-
-console.log(game());
